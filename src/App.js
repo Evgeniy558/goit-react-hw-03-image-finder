@@ -13,7 +13,6 @@ class App extends Component {
     pictures: [],
     isLoarding: false,
     searchValue: "",
-    page: 1,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -21,6 +20,7 @@ class App extends Component {
       JSON.stringify(nextState.pictures) !== JSON.stringify(this.state.pictures)
     ) {
       this.setState((prevState) => ({ page: prevState.page + 1 }));
+      console.log("updateApp");
       return true;
     }
     return false;
@@ -47,6 +47,7 @@ class App extends Component {
       this.state.searchValue,
       this.isLoaded
     );
+
     this.setState((prevState) => ({
       pictures: [...prevState.pictures, ...responce.data.hits],
     }));

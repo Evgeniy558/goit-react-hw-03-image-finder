@@ -4,13 +4,13 @@ import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
 
 class ImageGallery extends Component {
   componentWillUnmount() {
-    console.log("unmount");
     this.props.setDefaultAppState();
   }
   shouldComponentUpdate(nextProps) {
     if (
       JSON.stringify(nextProps.pictures) !== JSON.stringify(this.props.pictures)
     ) {
+      console.log("update");
       return true;
     }
     return false;
