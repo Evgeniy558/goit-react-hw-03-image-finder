@@ -7,7 +7,7 @@ import Button from "./components/Button/Button";
 import { requestToApi } from "./serveces/requestToApi";
 export const IMG_PER_PAGE = 12;
 const LOADINGDEFAULTPAGE = 1;
-
+// test
 class App extends Component {
   state = {
     pictures: [],
