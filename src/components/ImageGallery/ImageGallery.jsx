@@ -3,10 +3,10 @@ import css from "./ImageGallery.module.css";
 import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
 
 class ImageGallery extends Component {
-  // componentWillUnmount() {
-  //   console.log("unmount");
-  //   this.props.updateApp();
-  // }
+  componentWillUnmount() {
+    console.log("unmount");
+    this.props.setDefaultAppState();
+  }
   shouldComponentUpdate(nextProps) {
     if (
       JSON.stringify(nextProps.pictures) !== JSON.stringify(this.props.pictures)

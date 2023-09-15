@@ -2,11 +2,11 @@ import { Component } from "react";
 import "./App.css";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import Searchbar from "./components/Searchbar/Searchbar";
-import axios from "axios";
 import Loader from "./components/Loader/Loader";
 import Button from "./components/Button/Button";
-
-const IMG_PER_PAGE = 12;
+import { requestToApi } from "./serveces/requestToApi";
+export const IMG_PER_PAGE = 12;
+const LOADINGDEFAULTPAGE = 1;
 
 class App extends Component {
   state = {
@@ -15,17 +15,6 @@ class App extends Component {
     searchValue: "",
     page: 1,
   };
-
-  componentDidUpdate() {
-    // this.setState((prevState) => ({ page: prevState.page + 1 }));
-    console.log("did update");
-  }
-  componentDidMount() {
-    console.log("did mount");
-  }
-  componentWillUnmount() {
-    console.log("unmount");
-  }
 
   shouldComponentUpdate(nextProps, nextState) {
     if (
@@ -36,47 +25,36 @@ class App extends Component {
     }
     return false;
   }
-
-  updateAppState = () => {
-    this.setState({ pictures: [], page: 1 });
-  };
-
-  requestToApi = async (page) => {
-    try {
-      const responce = await axios.get("https://pixabay.com/api/", {
-        params: {
-          key: "36234067-70acfbfc80ca70cd9e73eaaab",
-          q: this.state.searchValue,
-          image_type: "photo",
-          orientation: "horizontal",
-          safesearch: true,
-          page: page,
-          per_page: IMG_PER_PAGE,
-        },
-      });
-
-      this.setState((prevState) => ({
-        pictures: [...prevState.pictures, ...responce.data.hits],
-      }));
-    } catch (error) {
-      console.error(error);
-    } finally {
-      this.setState({ isLoarding: false });
-    }
+  //set default state after submit and unmount component ImageGalleryItem
+  setDefaultAppState = () => {
+    this.setState({ pictures: [] });
+    this.setState({ page: 1 });
   };
 
   submit = async (ev) => {
     ev.preventDefault();
-    this.updateAppState();
+    this.setDefaultAppState();
     if (this.state.searchValue) {
       this.setState({ isLoarding: true });
-      await this.requestToApi(1);
+      await this.loard(LOADINGDEFAULTPAGE);
     }
     return;
   };
 
-  loardMore = async () => {
-    await this.requestToApi(this.state.page);
+  loard = async (page) => {
+    const responce = await requestToApi(
+      page,
+      this.state.searchValue,
+      this.isLoaded
+    );
+    this.setState((prevState) => ({
+      pictures: [...prevState.pictures, ...responce.data.hits],
+    }));
+  };
+
+  //hide loager
+  isLoaded = () => {
+    this.setState({ isLoarding: false });
   };
 
   getSearchValue = (ev) => {
@@ -84,8 +62,7 @@ class App extends Component {
   };
 
   render() {
-    console.log("render");
-    const { pictures, isLoarding } = this.state;
+    const { pictures, isLoarding, page } = this.state;
     return (
       <div className="App">
         {isLoarding ? (
@@ -98,11 +75,14 @@ class App extends Component {
           <>
             {" "}
             <Searchbar onSubmit={this.submit} onChange={this.getSearchValue} />
-            <ImageGallery pictures={pictures} updateApp={this.updateAppState} />
+            <ImageGallery
+              pictures={pictures}
+              setDefaultAppState={this.setDefaultAppState}
+            />
             {pictures.length > 0 && (
               <Button
                 onClick={() => {
-                  this.loardMore();
+                  this.loard(page + 1);
                 }}
               />
             )}
