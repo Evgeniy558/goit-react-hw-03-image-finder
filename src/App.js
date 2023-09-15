@@ -5,6 +5,7 @@ import Searchbar from "./components/Searchbar/Searchbar";
 import Loader from "./components/Loader/Loader";
 import Button from "./components/Button/Button";
 import { requestToApi } from "./serveces/requestToApi";
+
 export const IMG_PER_PAGE = 12;
 const LOADINGDEFAULTPAGE = 1;
 // test
@@ -13,6 +14,7 @@ class App extends Component {
     pictures: [],
     isLoarding: false,
     searchValue: "",
+    page: "",
   };
 
   shouldComponentUpdate(nextProps, nextState) {

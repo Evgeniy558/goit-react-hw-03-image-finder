@@ -16,23 +16,28 @@ class ImageGallery extends Component {
     return false;
   }
 
+  onclickFoto = () => {};
+
   render() {
     const { pictures } = this.props;
     // console.log("render");
 
     return (
-      <ul className={css.ImageGallery}>
-        {pictures.map((picture) => {
-          return (
-            <ImageGalleryItem
-              key={picture.id}
-              id={picture.id}
-              webformatURL={picture.webformatURL}
-              largeImageURL={picture.largeImageURL}
-            />
-          );
-        })}
-      </ul>
+      <>
+        <ul className={css.ImageGallery}>
+          {pictures.map((picture) => {
+            return (
+              <ImageGalleryItem
+                key={picture.id}
+                id={picture.id}
+                webformatURL={picture.webformatURL}
+                largeImageURL={picture.largeImageURL}
+                onClick={this.onclickFoto}
+              />
+            );
+          })}
+        </ul>
+      </>
     );
   }
 }
