@@ -1,6 +1,7 @@
 import { Component } from "react";
 import css from "./ImageGallery.module.css";
 import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
+import PropTypes from "prop-types";
 
 class ImageGallery extends Component {
   componentWillUnmount() {
@@ -16,8 +17,6 @@ class ImageGallery extends Component {
     return false;
   }
 
-  onclickFoto = () => {};
-
   render() {
     const { pictures } = this.props;
     // console.log("render");
@@ -32,7 +31,6 @@ class ImageGallery extends Component {
                 id={picture.id}
                 webformatURL={picture.webformatURL}
                 largeImageURL={picture.largeImageURL}
-                onClick={this.onclickFoto}
               />
             );
           })}
@@ -41,4 +39,7 @@ class ImageGallery extends Component {
     );
   }
 }
+ImageGallery.propTypes = {
+  pictures: PropTypes.array.isRequired,
+};
 export default ImageGallery;

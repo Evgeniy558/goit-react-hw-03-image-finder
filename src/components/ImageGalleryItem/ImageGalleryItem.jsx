@@ -1,6 +1,7 @@
 import { Component } from "react";
 import css from "./ImageGalleryItem.module.css";
 import Modal from "../Modal/Modal";
+import PropTypes from "prop-types";
 class ImageGalleryItem extends Component {
   state = { modalIsVisible: true };
 
@@ -35,4 +36,9 @@ class ImageGalleryItem extends Component {
     );
   }
 }
+ImageGalleryItem.propTypes = {
+  id: PropTypes.number.isRequired,
+  webformatURL: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+};
 export default ImageGalleryItem;
