@@ -4,22 +4,8 @@ import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
 import PropTypes from "prop-types";
 
 class ImageGallery extends Component {
-  componentWillUnmount() {
-    this.props.setDefaultAppState();
-  }
-  shouldComponentUpdate(nextProps) {
-    if (
-      JSON.stringify(nextProps.pictures) !== JSON.stringify(this.props.pictures)
-    ) {
-      console.log("update");
-      return true;
-    }
-    return false;
-  }
-
   render() {
     const { pictures } = this.props;
-    // console.log("render");
 
     return (
       <>

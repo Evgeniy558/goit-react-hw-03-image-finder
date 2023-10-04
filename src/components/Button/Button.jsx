@@ -3,9 +3,14 @@ import css from "./Button.module.css";
 import PropTypes from "prop-types";
 class Button extends Component {
   render() {
-    const { onClick } = this.props;
+    const { onClick, isHidden } = this.props;
+    const hiddenStyle = isHidden ? css["isHidden"] : "";
     return (
-      <button className={css.Button} type="button" onClick={onClick}>
+      <button
+        className={`${css.Button} ${hiddenStyle}`}
+        type="button"
+        onClick={onClick}
+      >
         Loar more
       </button>
     );
@@ -13,5 +18,6 @@ class Button extends Component {
 }
 Button.propTypes = {
   onClick: PropTypes.func.isRequired,
+  isHidden: PropTypes.bool.isRequired,
 };
 export default Button;

@@ -5,54 +5,55 @@ import Searchbar from "./components/Searchbar/Searchbar";
 import Loader from "./components/Loader/Loader";
 import Button from "./components/Button/Button";
 import { requestToApi } from "./serveces/requestToApi";
-
-export const IMG_PER_PAGE = 12;
+import Notiflix from "notiflix";
 const LOADINGDEFAULTPAGE = 1;
 // test
+
 class App extends Component {
   state = {
     pictures: [],
     isLoarding: false,
     searchValue: "",
     page: "",
+    isHidden: false,
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (
-      JSON.stringify(nextState.pictures) !== JSON.stringify(this.state.pictures)
-    ) {
-      this.setState((prevState) => ({ page: prevState.page + 1 }));
-      console.log("updateApp");
-      return true;
-    }
-    return false;
-  }
-  //set default state after submit and unmount component ImageGalleryItem
   setDefaultAppState = () => {
     this.setState({ pictures: [] });
     this.setState({ page: 1 });
+    this.setState({ isHidden: false });
   };
 
   submit = async (ev) => {
     ev.preventDefault();
     this.setDefaultAppState();
     if (this.state.searchValue) {
-      this.setState({ isLoarding: true });
-      await this.loard(LOADINGDEFAULTPAGE);
+      await this.renderPictures(LOADINGDEFAULTPAGE);
     }
+    ev.target.reset();
     return;
   };
 
-  loard = async (page) => {
-    const responce = await requestToApi(
-      page,
-      this.state.searchValue,
-      this.isLoaded
-    );
-
-    this.setState((prevState) => ({
-      pictures: [...prevState.pictures, ...responce.data.hits],
-    }));
+  renderPictures = async (page) => {
+    this.setState({ isLoarding: true });
+    try {
+      const responce = await requestToApi(page, this.state.searchValue);
+      this.setState(
+        (prevState) => ({
+          pictures: [...prevState.pictures, ...responce.hits],
+          page: prevState.page + 1,
+        }),
+        () => {
+          if (responce.totalHits === this.state.pictures.length) {
+            this.setState({ isHidden: true });
+          }
+        }
+      );
+    } catch (error) {
+      Notiflix.Notify.failure(`Error ${error}`);
+    } finally {
+      this.isLoaded();
+    }
   };
 
   //hide loager
@@ -65,18 +66,16 @@ class App extends Component {
   };
 
   render() {
-    const { pictures, isLoarding, page } = this.state;
+    const { pictures, isLoarding, page, isHidden } = this.state;
     return (
       <div className="App">
         {isLoarding ? (
           <>
-            {" "}
             <Searchbar />
             <Loader />
           </>
         ) : (
           <>
-            {" "}
             <Searchbar onSubmit={this.submit} onChange={this.getSearchValue} />
             <ImageGallery
               pictures={pictures}
@@ -84,8 +83,9 @@ class App extends Component {
             />
             {pictures.length > 0 && (
               <Button
+                isHidden={isHidden}
                 onClick={() => {
-                  this.loard(page + 1);
+                  this.renderPictures(page);
                 }}
               />
             )}

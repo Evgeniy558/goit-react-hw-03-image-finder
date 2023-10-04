@@ -6,12 +6,10 @@ class ImageGalleryItem extends Component {
   state = { modalIsVisible: true };
 
   openModal = () => {
-    console.log("click Foto");
     this.setState({ modalIsVisible: false });
   };
 
   closeModal = () => {
-    console.log("click Background ");
     this.setState({ modalIsVisible: true });
   };
 
